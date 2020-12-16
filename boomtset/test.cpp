@@ -30,7 +30,7 @@ void loadconfig()
 	ostringstream tmp;
 	if (!fs)
 	{
-		cout << "[" << gettime() <<u8" INFO] " << config_file << " not found, creating file(default value used)\n";
+		cout << "[" << gettime() << u8" INFO] " << config_file << " not found, creating file(default value used)\n";
 		std::ofstream of(config_file);
 		if (of)
 		{
@@ -48,13 +48,13 @@ void loadconfig()
 		string data = tmp.str();
 		config.Parse(data.c_str());
 	}
-	std::cout << "[" << gettime() << u8" Item-Id-Test] Loaded!By:DreamGuXiang\n"<<endl;
+	std::cout << "[" << gettime() << u8" Item-Id-Test] Loaded!By:DreamGuXiang\n" << endl;
 }
 
 
 using namespace std;
-THook(bool, "?useItemOn@GameMode@@UEAA_NAEAVItemStack@@AEBVBlockPos@@EAEBVVec3@@PEBVBlock@@@Z",
-    void* _this, ItemStack& item, BlockPos const& blkpos, unsigned char a4, Vec3 const& v5, Block const* blk) {
+THook(bool, "?useItem@GameMode@@UEAA_NAEAVItemStack@@@Z",
+	void* _this, ItemStack& item) {
 	auto sp = *reinterpret_cast<Player**>(reinterpret_cast<unsigned long long>(_this) + 8);
 	if (config["kg"].GetBool() == true) {
 		auto mstr = item.getId();
@@ -64,14 +64,8 @@ THook(bool, "?useItemOn@GameMode@@UEAA_NAEAVItemStack@@AEBVBlockPos@@EAEBVVec3@@
 			std::cout << u8"[Item-Id-Test]使用触发者:" << sp->getNameTag() << u8"|物品名称:" << mstr2 << u8"|物品id:" << mstr1 << endl;
 			return false;
 		}
-		else
-		{
-			string mstr3 = u8"无效操作";
-			std::cout << u8"[Item-Id-Test]使用触发者:" << sp->getNameTag() << u8"|物品名称:" << mstr3 << u8"|物品id:" << mstr3 << endl;
-			return false;
-		}
 	}
-	bool vaule = original(_this, item, blkpos, a4, v5, blk);
+	bool vaule = original(_this, item);
 }
 
 #pragma region CMDENUM
@@ -87,7 +81,7 @@ bool reconfig(CommandOrigin const& ori, CommandOutput& outp, MyEnum<iitcmd> op) 
 	switch (op)
 	{
 	case iitcmd::open: {
-		fstream fs("config\\Item-Id-Test.json",ios::out);
+		fstream fs("config\\Item-Id-Test.json", ios::out);
 		ostringstream tmp;
 		tmp << fs.rdbuf();
 		fs.write("{\"kg\":true}", 11);
@@ -101,7 +95,7 @@ bool reconfig(CommandOrigin const& ori, CommandOutput& outp, MyEnum<iitcmd> op) 
 		fstream fs("config\\Item-Id-Test.json", ios::out);
 		ostringstream tmp;
 		tmp << fs.rdbuf();
-		fs.write("{\"kg\":false}",12);
+		fs.write("{\"kg\":false}", 12);
 		fs.close();
 		std::cout << "[Item-Id-Test] close now" << endl;
 		outp.addMessage("[Item-Id-Test] iit close");
@@ -111,7 +105,7 @@ bool reconfig(CommandOrigin const& ori, CommandOutput& outp, MyEnum<iitcmd> op) 
 	}
 }
 
-bool oncmd_iit(CommandOrigin const& ori, CommandOutput & outp, MyEnum<iitcmd> op) {
+bool oncmd_iit(CommandOrigin const& ori, CommandOutput& outp, MyEnum<iitcmd> op) {
 	return reconfig(ori, outp, op);
 }
 #pragma endregion
