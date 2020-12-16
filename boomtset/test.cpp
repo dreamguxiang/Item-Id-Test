@@ -67,7 +67,7 @@ THook(bool, "?useItem@GameMode@@UEAA_NAEAVItemStack@@@Z",
 	}
 	bool vaule = original(_this, item);
 }
-
+//×¢²áÃüÁî
 #pragma region CMDENUM
 enum class iitcmd :int {
 	open = 1,
